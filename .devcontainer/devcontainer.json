@@ -1,0 +1,24 @@
+{
+  // A container for working on the dotfiles themselves. A plain base image,
+  // so install.sh's package installs and rc-file hooks actually get exercised.
+  "name": "dotfiles-demo",
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+
+  "onCreateCommand": "sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends shellcheck shfmt && sudo rm -rf /var/lib/apt/lists/*",
+
+  // Install the working copy on every start (it's idempotent), so edits here
+  // are live in this container's ~/.bashrc, ~/.gitconfig, ...
+  "postStartCommand": "./install.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "timonwong.shellcheck",
+        "foxundermoon.shell-format",
+        "editorconfig.editorconfig"
+      ]
+    }
+  },
+
+  "remoteUser": "vscode"
+}

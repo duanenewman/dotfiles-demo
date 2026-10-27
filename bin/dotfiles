@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Small helper for the dotfiles repo this script lives in.
+#
+#   dotfiles status   what's linked, what's changed
+#   dotfiles update   pull and re-run the installer
+#   dotfiles cd       print the repo path (cd "$(dotfiles cd)")
+
+set -euo pipefail
+
+DOTFILES_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
+
+case "${1:-status}" in
+  status)
+    echo "repo:  ${DOTFILES_DIR} ($(git -C "${DOTFILES_DIR}" rev-parse --short HEAD 2>/dev/null || echo 'not a git repo'))"
+    echo "where: $("${DOTFILES_DIR}/bin/where-am-i")"
+    for f in ~/.tmux.conf ~/.editorconfig; do
+      if [ -L "${f}" ]; then
+        echo "  ok   ${f} -> $(readlink "${f}")"
+      else
+        echo "  --   ${f} (not linked)"
+      fi
+    done
+    grep -qF '# dotfiles-demo' ~/.bashrc 2>/dev/null &&
+      echo "  ok   ~/.bashrc sources shell/init.sh" ||
+      echo "  --   ~/.bashrc not hooked"
+    git config --global --get-all include.path 2>/dev/null | grep -qF "${DOTFILES_DIR}/git/gitconfig" &&
+      echo "  ok   ~/.gitconfig includes git/gitconfig" ||
+      echo "  --   ~/.gitconfig not hooked"
+    git -C "${DOTFILES_DIR}" status --short
+    ;;
+  update)
+    git -C "${DOTFILES_DIR}" pull --ff-only
+    "${DOTFILES_DIR}/install.sh"
+    ;;
+  cd)
+    echo "${DOTFILES_DIR}"
+    ;;
+  *)
+    sed -n '2,7p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+    exit 1
+    ;;
+esac

@@ -1,0 +1,14 @@
+{
+  // A stand-in for "somebody else's project". Note what's NOT here: no
+  // aliases, no prompt, no git settings, no mention of dotfiles at all.
+  // Those come from *your* VS Code user settings:
+  //
+  //   "dotfiles.repository": "<you>/dotfiles-demo",
+  //   "dotfiles.targetPath": "~/dotfiles",
+  //   "dotfiles.installCommand": "install.sh"
+  //
+  // so every container you open gets them, and teammates get theirs.
+  "name": "sample-project",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "remoteUser": "vscode"
+}

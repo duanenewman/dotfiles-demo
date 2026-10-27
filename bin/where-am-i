@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Print a one-word name for the kind of environment this shell is in.
+# Used by the prompt and the installer, and handy on stage.
+
+if [ -n "${CODESPACES:-}" ]; then
+  echo codespace
+elif [ -n "${REMOTE_CONTAINERS:-}" ] || [ -f /.dockerenv ] || [ -f /run/.containerenv ]; then
+  echo devcontainer
+elif [ -n "${WSL_DISTRO_NAME:-}" ] || grep -qi microsoft /proc/version 2>/dev/null; then
+  echo "wsl"
+else
+  case "$(uname -s)" in
+    Darwin) echo mac ;;
+    MINGW* | MSYS* | CYGWIN*) echo git-bash ;;
+    *) echo linux ;;
+  esac
+fi
