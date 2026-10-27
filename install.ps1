@@ -71,7 +71,9 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
   # Forward slashes: git reads the path the same either way, and they don't
   # need escaping.
   $gitconfig = (Join-Path $DotfilesDir 'git\gitconfig') -replace '\\', '/'
-  git config --global --unset-all --fixed-value include.path $gitconfig 2>$null
+  # (try: PowerShell 5.1 turns redirected native stderr into a terminating
+  # error under $ErrorActionPreference = 'Stop'.)
+  try { git config --global --unset-all --fixed-value include.path $gitconfig 2>$null } catch { }
   git config --global --add include.path $gitconfig
   Write-Host "  ~/.gitconfig includes $gitconfig"
 } else {
