@@ -89,6 +89,15 @@ echo "Linking config files:"
 link "${DOTFILES_DIR}/tmux/tmux.conf" "${HOME}/.tmux.conf"
 link "${DOTFILES_DIR}/editorconfig" "${HOME}/.editorconfig"
 
+echo "Linking Claude Code skills:"
+# One link per skill, so skills installed some other way coexist in
+# ~/.claude/skills.
+for skill_dir in "${DOTFILES_DIR}"/claude/skills/*/; do
+  [ -d "${skill_dir}" ] || continue
+  skill_dir="${skill_dir%/}"
+  link "${skill_dir}" "${HOME}/.claude/skills/$(basename "${skill_dir}")"
+done
+
 echo "Hooking shell startup:"
 init_line="[ -f '${DOTFILES_DIR}/shell/init.sh' ] && . '${DOTFILES_DIR}/shell/init.sh'"
 set_tagged_line "${HOME}/.bashrc" "${init_line}"

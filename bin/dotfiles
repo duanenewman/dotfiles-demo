@@ -20,6 +20,14 @@ case "${1:-status}" in
         echo "  --   ${f} (not linked)"
       fi
     done
+    for d in "${DOTFILES_DIR}"/claude/skills/*/; do
+      f=~/.claude/skills/"$(basename "${d}")"
+      if [ -L "${f}" ]; then
+        echo "  ok   ${f} -> $(readlink "${f}")"
+      else
+        echo "  --   ${f} (not linked)"
+      fi
+    done
     grep -qF '# dotfiles-demo' ~/.bashrc 2>/dev/null &&
       echo "  ok   ~/.bashrc sources shell/init.sh" ||
       echo "  --   ~/.bashrc not hooked"

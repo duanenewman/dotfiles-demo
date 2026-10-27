@@ -11,7 +11,8 @@
       powershell/profile.ps1
     - adds git/gitconfig to ~/.gitconfig with [include]
 
-  Skips tmux and the bash prompt. Inside WSL, run install.sh instead.
+  Skips tmux, the bash prompt and the Claude Code skills (worktree-shells
+  drives tmux). Inside WSL, run install.sh instead.
 
   Symlinks need Developer Mode (Settings > System > For developers) or an
   elevated shell; without either, files are copied and you should re-run this

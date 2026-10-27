@@ -18,10 +18,11 @@ container the same prompt, aliases, git config, tmux and editor defaults.
 | `git/gitconfig` | `[include]`d by `~/.gitconfig` | Sensible defaults and aliases (`git lg`, `git st`, `git amend`...). No `[user]`. |
 | `tmux/tmux.conf` | `~/.tmux.conf` (link) | Mouse, truecolor, big scrollback, vi copy mode. |
 | `editorconfig` | `~/.editorconfig` (link) | LF, UTF-8, final newline, 2-space indent everywhere. |
-| `bin/` | on `PATH` | `dotfiles` (`status` / `update`), `where-am-i`. |
+| `bin/` | on `PATH` | `dotfiles` (`status` / `update`), `where-am-i`, `tmux-worktree-window.sh`. |
+| `claude/skills/*` | each linked into `~/.claude/skills/` | [Claude Code](https://code.claude.com) skills. `/worktree-shells`: ask Claude to "add worktree shells for X" and it opens a tmux window named after that git worktree, with two shells (top/bottom) in its root, via `bin/tmux-worktree-window.sh`. Needs tmux; Linux, macOS and WSL only. |
 | `powershell/profile.ps1` | dot-sourced by `$PROFILE` | The same aliases on native Windows. |
 | `install.sh` / `install.ps1` | — | The installers. |
-| `tests/test-install.sh` | — | Runs the installer against a throwaway `$HOME`. |
+| `tests/` | — | `test-install.sh` runs the installer against a throwaway `$HOME`; `test-tmux-worktree-window.sh` tests the skill's script. |
 | `.devcontainer/` | — | A container for working on this repo. |
 | `demo/sample-project/` | — | A plain project used in the live demo. |
 | `docs/demo-script.md` | — | Run-of-show for the talk. |
@@ -95,7 +96,8 @@ Keep the clone where it is, because the links point into it. To update:
 ## Hacking on it
 
 ```bash
-tests/test-install.sh     # runs install.sh against a temp $HOME; needs bash + git
+tests/test-install.sh                # runs install.sh against a temp $HOME; needs bash + git
+tests/test-tmux-worktree-window.sh   # private tmux server; needs tmux + git
 shellcheck -x install.sh bin/* shell/* tests/*.sh
 ```
 

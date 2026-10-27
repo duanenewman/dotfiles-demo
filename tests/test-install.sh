@@ -34,6 +34,10 @@ fresh_home
 check "installer succeeds" install
 check "tmux.conf is a link into the repo" [ "$(readlink "${HOME}/.tmux.conf")" = "${REPO}/tmux/tmux.conf" ]
 check "editorconfig is a link into the repo" [ "$(readlink "${HOME}/.editorconfig")" = "${REPO}/editorconfig" ]
+check "worktree-shells skill is a link into the repo" \
+  [ "$(readlink "${HOME}/.claude/skills/worktree-shells")" = "${REPO}/claude/skills/worktree-shells" ]
+check "skill's script is on PATH in a new shell" \
+  bash -ic 'command -v tmux-worktree-window.sh >/dev/null' 2>/dev/null
 check "bashrc sources init.sh" grep -qF "${REPO}/shell/init.sh" "${HOME}/.bashrc"
 check "gitconfig includes the repo's gitconfig" \
   bash -c "git config --global --get-all include.path | grep -qxF '${REPO}/git/gitconfig'"
@@ -53,9 +57,11 @@ fresh_home
 printf 'export KEEP_ME=1\n' >"${HOME}/.bashrc"
 printf 'set -g mouse off\n' >"${HOME}/.tmux.conf"
 git config --global user.name "Host Identity"
+mkdir -p "${HOME}/.claude/skills/my-other-skill"
 install
 check "existing bashrc lines survive" grep -qxF 'export KEEP_ME=1' "${HOME}/.bashrc"
 check "real tmux.conf backed up" grep -qF 'mouse off' "${HOME}/.tmux.conf.pre-dotfiles.bak"
+check "skills installed another way survive" [ -d "${HOME}/.claude/skills/my-other-skill" ]
 check "git identity survives" [ "$(git config --global user.name)" = "Host Identity" ]
 
 echo "local overrides"
